@@ -17,12 +17,18 @@ function Square(props) {
 	constructor(props) {
 		super(props);
 		this.state = {
-			squares: Array(9).fill(null),
+			// squares: Array(9).fill(null),
+			history: [{
+				squares: Array(9).fill(null)
+			}],
+			stepNum: 0,
 			xIsNext: true,
 		};
 	}
 
 	handleClick(i) {
+		const history = this.state.history.slice(0, this.state.stepNum + 1);
+		const current = history[history.length - 1];
 		const squares = this.state.squares.slice();
 		if (calculateWinner(this.state.squares) || squares[i]) {
 			return;
@@ -30,7 +36,15 @@ function Square(props) {
 		squares[i] = this.state.xIsNext ? 'X' : 'O';
 		this.setState({
 			squares: squares,
+			stepNum: history.length,
 			xIsNext: !this.state.xIsNext,
+		});
+	}
+
+	jumpTo(step) {
+		this.setState({
+			stepNum: step,
+			xIsNext: (step % 2) === 0,
 		});
 	}
 
